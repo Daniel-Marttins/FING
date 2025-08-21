@@ -1,75 +1,37 @@
-import React, { useCallback } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { Menu, X, Calendar, MapPin, Users, Clock, Info, Building } from 'lucide-react';
 import { Button } from './ui/button';
-
-interface LayoutProps {
-  children: React.ReactNode;
-}
+import { useActiveSection } from '@/hooks';
+import { LayoutProps, NavigationItem } from '@/types';
 
 export function Layout({ children }: LayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [activeSection, setActiveSection] = React.useState('#inicio');
-  const location = useLocation();
 
-  const navigation = [
+  // Memoize navigation to prevent re-creation on every render
+  const navigation: NavigationItem[] = useMemo(() => [
     { name: 'Início', href: '#inicio', icon: Calendar },
     { name: 'Sobre', href: '#sobre', icon: Info },
     { name: 'Realização', href: '#realizacao', icon: Building },
     { name: 'Localização', href: '#localizacao', icon: MapPin },
     { name: 'Palestrantes', href: '#palestrantes', icon: Users },
     { name: 'Programação', href: '#programacao', icon: Clock },
-  ];
+  ], []);
+
+  // Use optimized hook for active section management
+  const { activeSection, handleNavClick } = useActiveSection({ 
+    sections: navigation, 
+    offset: 100 
+  });
 
   const isActivePath = (hash: string) => {
     return activeSection === hash;
   };
 
-  React.useEffect(() => {
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const sections = navigation.map(nav => nav.href);
-          const scrollPosition = window.scrollY + 100; // offset para o header
-
-          for (let i = sections.length - 1; i >= 0; i--) {
-            const element = document.querySelector(sections[i]);
-            if (element) {
-              const offsetTop = element.getBoundingClientRect().top + window.pageYOffset;
-              if (scrollPosition >= offsetTop) {
-                setActiveSection(sections[i]);
-                break;
-              }
-            }
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Verificar a seção inicial
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [navigation]);
-
-  const handleNavClick = useCallback((href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      const headerHeight = 64; // altura do header fixo
-      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-      const offsetPosition = elementPosition - headerHeight;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-      setIsMenuOpen(false);
-    }
-  }, []);
+  const handleNavClickWithMenu = (href: string) => {
+    handleNavClick(href);
+    setIsMenuOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -95,7 +57,7 @@ export function Layout({ children }: LayoutProps) {
                   <button
                     key={item.name}
                     onClick={() => handleNavClick(item.href)}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
                       isActivePath(item.href)
                         ? 'bg-primary text-primary-foreground'
                         : 'text-muted-foreground hover:text-foreground hover:bg-muted'
@@ -128,8 +90,8 @@ export function Layout({ children }: LayoutProps) {
                   return (
                     <button
                       key={item.name}
-                      onClick={() => handleNavClick(item.href)}
-                      className={`flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      onClick={() => handleNavClickWithMenu(item.href)}
+                      className={`flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
                         isActivePath(item.href)
                           ? 'bg-primary text-primary-foreground'
                           : 'text-muted-foreground hover:text-foreground hover:bg-muted'
@@ -166,7 +128,7 @@ export function Layout({ children }: LayoutProps) {
                 </span>
               </div>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                Festival de Inovação e Negócios de Garanhuns - Um evento transformador que conecta empreendedores, inovadores e vision��rios.
+                Festival de Inovação e Negócios de Garanhuns - Um evento transformador que conecta empreendedores, inovadores e visionários.
               </p>
             </div>
 
@@ -184,13 +146,13 @@ export function Layout({ children }: LayoutProps) {
             <div>
               <h3 className="font-semibold mb-4">Redes Sociais</h3>
               <div className="flex space-x-4">
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-200">
                   Instagram
                 </a>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-200">
                   LinkedIn
                 </a>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-200">
                   Facebook
                 </a>
               </div>
