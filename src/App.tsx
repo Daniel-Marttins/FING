@@ -10,7 +10,12 @@ import Index from "./pages/Index";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminPalestrantes from "./pages/AdminPalestrantes";
-import { PlaceholderPage } from "./components/PlaceholderPage";
+import AdminInfo from "./pages/AdminInfo";
+import AdminProgramacao from "./pages/AdminProgramacao";
+import AdminRealizacao from "./pages/AdminRealizacao";
+import AdminLocalizacao from "./pages/AdminLocalizacao";
+import AdminTema from "./pages/AdminTema";
+import AdminConfiguracoes from "./pages/AdminConfiguracoes";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,42 +42,12 @@ const App = () => (
                 <Routes>
                   <Route path="dashboard" element={<AdminDashboard />} />
                   <Route path="palestrantes" element={<AdminPalestrantes />} />
-                  <Route path="info" element={
-                    <PlaceholderPage
-                      title="Informações Gerais"
-                      description="Gerencie informações básicas do evento"
-                    />
-                  } />
-                  <Route path="programacao" element={
-                    <PlaceholderPage
-                      title="Programação"
-                      description="Gerencie a programação do evento"
-                    />
-                  } />
-                  <Route path="realizacao" element={
-                    <PlaceholderPage
-                      title="Realização"
-                      description="Gerencie organizadores e patrocinadores"
-                    />
-                  } />
-                  <Route path="localizacao" element={
-                    <PlaceholderPage
-                      title="Localização"
-                      description="Gerencie informações de localização"
-                    />
-                  } />
-                  <Route path="tema" element={
-                    <PlaceholderPage
-                      title="Tema Visual"
-                      description="Customize cores e estilos do site"
-                    />
-                  } />
-                  <Route path="configuracoes" element={
-                    <PlaceholderPage
-                      title="Configurações"
-                      description="Configurações gerais do sistema"
-                    />
-                  } />
+                  <Route path="info" element={<AdminInfo />} />
+                  <Route path="programacao" element={<AdminProgramacao />} />
+                  <Route path="realizacao" element={<AdminRealizacao />} />
+                  <Route path="localizacao" element={<AdminLocalizacao />} />
+                  <Route path="tema" element={<AdminTema />} />
+                  <Route path="configuracoes" element={<AdminConfiguracoes />} />
                   <Route path="*" element={<AdminDashboard />} />
                 </Routes>
               </AdminLayout>
