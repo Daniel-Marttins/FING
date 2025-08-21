@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
 interface UseScrollPositionOptions {
   throttle?: boolean;
@@ -8,13 +8,13 @@ interface UseScrollPositionOptions {
 export function useScrollPosition(options: UseScrollPositionOptions = {}) {
   const { throttle = true, element } = options;
   const [scrollY, setScrollY] = useState(0);
-  const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('down');
+  const [scrollDirection, setScrollDirection] = useState<"up" | "down">("down");
 
   const updateScrollPosition = useCallback(() => {
     const target = element || window;
     const currentScrollY = element ? element.scrollTop : window.scrollY;
-    
-    setScrollDirection(currentScrollY > scrollY ? 'down' : 'up');
+
+    setScrollDirection(currentScrollY > scrollY ? "down" : "up");
     setScrollY(currentScrollY);
   }, [scrollY, element]);
 
@@ -36,8 +36,8 @@ export function useScrollPosition(options: UseScrollPositionOptions = {}) {
       }
     };
 
-    target.addEventListener('scroll', handleScroll, { passive: true });
-    return () => target.removeEventListener('scroll', handleScroll);
+    target.addEventListener("scroll", handleScroll, { passive: true });
+    return () => target.removeEventListener("scroll", handleScroll);
   }, [updateScrollPosition, throttle, element]);
 
   return { scrollY, scrollDirection };

@@ -92,7 +92,9 @@ export default function AdminProgramacao() {
                   <Label htmlFor="type">Tipo*</Label>
                   <Select
                     value={formData.type}
-                    onValueChange={(value) => updateFormData("type", value as ProgramEvent["type"])}
+                    onValueChange={(value) =>
+                      updateFormData("type", value as ProgramEvent["type"])
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione o tipo" />
@@ -113,7 +115,9 @@ export default function AdminProgramacao() {
                 <Textarea
                   id="description"
                   value={formData.description || ""}
-                  onChange={(e) => updateFormData("description", e.target.value)}
+                  onChange={(e) =>
+                    updateFormData("description", e.target.value)
+                  }
                   placeholder="Descrição do evento"
                   rows={3}
                 />
@@ -156,7 +160,9 @@ export default function AdminProgramacao() {
                     id="startTime"
                     type="time"
                     value={formData.startTime || ""}
-                    onChange={(e) => updateFormData("startTime", e.target.value)}
+                    onChange={(e) =>
+                      updateFormData("startTime", e.target.value)
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -177,7 +183,10 @@ export default function AdminProgramacao() {
                   type="number"
                   value={formData.capacity || ""}
                   onChange={(e) =>
-                    updateFormData("capacity", e.target.value ? parseInt(e.target.value) : undefined)
+                    updateFormData(
+                      "capacity",
+                      e.target.value ? parseInt(e.target.value) : undefined,
+                    )
                   }
                   placeholder="Número máximo de participantes"
                 />

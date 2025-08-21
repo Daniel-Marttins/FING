@@ -77,7 +77,7 @@
 /* Optimized animations with reduced motion support */
 @layer components {
   .bg-grid-pattern {
-    background-image: 
+    background-image:
       linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
       linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
     background-size: 50px 50px;
@@ -189,9 +189,10 @@ html {
 /* Loading states */
 @layer components {
   .loading-skeleton {
-    background: linear-gradient(90deg, 
-      hsl(var(--muted)) 25%, 
-      hsl(var(--muted-foreground) / 0.1) 50%, 
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 25%,
+      hsl(var(--muted-foreground) / 0.1) 50%,
       hsl(var(--muted)) 75%
     );
     background-size: 200% 100%;
@@ -226,7 +227,7 @@ html {
   .no-print {
     display: none !important;
   }
-  
+
   * {
     color: black !important;
     background: white !important;

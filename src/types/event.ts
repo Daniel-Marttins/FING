@@ -18,7 +18,7 @@ export interface ProgramaItem {
   palestrante: string;
   palco: string;
   descricao: string;
-  tipo: 'keynote' | 'workshop' | 'painel' | 'networking';
+  tipo: "keynote" | "workshop" | "painel" | "networking";
 }
 
 export interface EventType {

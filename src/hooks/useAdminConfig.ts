@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
-import { AdminConfig } from '@/types';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useCallback } from "react";
+import { AdminConfig } from "@/types";
+import { useToast } from "@/hooks/use-toast";
 
 const initialConfig: AdminConfig = {
   general: {
@@ -67,22 +67,25 @@ export function useAdminConfig() {
   const [config, setConfig] = useState<AdminConfig>(initialConfig);
   const [isLoading, setIsLoading] = useState(false);
 
-  const updateConfig = useCallback((section: keyof AdminConfig, field: string, value: any) => {
-    setConfig(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [field]: value,
-      },
-    }));
-  }, []);
+  const updateConfig = useCallback(
+    (section: keyof AdminConfig, field: string, value: any) => {
+      setConfig((prev) => ({
+        ...prev,
+        [section]: {
+          ...prev[section],
+          [field]: value,
+        },
+      }));
+    },
+    [],
+  );
 
   const saveConfig = useCallback(async () => {
     setIsLoading(true);
     try {
       // Here you would typically save to an API
       // await saveConfigToAPI(config);
-      
+
       toast({
         title: "Configurações salvas",
         description: "As configurações foram atualizadas com sucesso.",

@@ -1,6 +1,6 @@
-import { useState, useCallback, useMemo } from 'react';
-import { ProgramEvent, EventType } from '@/types';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useCallback, useMemo } from "react";
+import { ProgramEvent, EventType } from "@/types";
+import { useToast } from "@/hooks/use-toast";
 
 const eventTypes: EventType[] = [
   { value: "palestra", label: "Palestra", color: "bg-blue-500" },
@@ -53,14 +53,17 @@ export function useEventManagement() {
   }, [events]);
 
   const groupedEvents = useMemo(() => {
-    return sortedEvents.reduce((groups, event) => {
-      const date = event.date;
-      if (!groups[date]) {
-        groups[date] = [];
-      }
-      groups[date].push(event);
-      return groups;
-    }, {} as Record<string, ProgramEvent[]>);
+    return sortedEvents.reduce(
+      (groups, event) => {
+        const date = event.date;
+        if (!groups[date]) {
+          groups[date] = [];
+        }
+        groups[date].push(event);
+        return groups;
+      },
+      {} as Record<string, ProgramEvent[]>,
+    );
   }, [sortedEvents]);
 
   const getTypeColor = useCallback((type: string) => {
@@ -92,7 +95,12 @@ export function useEventManagement() {
   }, []);
 
   const handleSaveEvent = useCallback(() => {
-    if (!formData.title || !formData.date || !formData.startTime || !formData.endTime) {
+    if (
+      !formData.title ||
+      !formData.date ||
+      !formData.startTime ||
+      !formData.endTime
+    ) {
       toast({
         title: "Erro",
         description: "Preencha todos os campos obrigatórios.",
@@ -128,17 +136,23 @@ export function useEventManagement() {
     setIsDialogOpen(false);
   }, [formData, editingEvent, toast]);
 
-  const handleDeleteEvent = useCallback((eventId: string) => {
-    setEvents((prev) => prev.filter((event) => event.id !== eventId));
-    toast({
-      title: "Evento removido",
-      description: "O evento foi removido da programação.",
-    });
-  }, [toast]);
+  const handleDeleteEvent = useCallback(
+    (eventId: string) => {
+      setEvents((prev) => prev.filter((event) => event.id !== eventId));
+      toast({
+        title: "Evento removido",
+        description: "O evento foi removido da programação.",
+      });
+    },
+    [toast],
+  );
 
-  const updateFormData = useCallback((field: keyof ProgramEvent, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  }, []);
+  const updateFormData = useCallback(
+    (field: keyof ProgramEvent, value: any) => {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+    },
+    [],
+  );
 
   return {
     events: sortedEvents,

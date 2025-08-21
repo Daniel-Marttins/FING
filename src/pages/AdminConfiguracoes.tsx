@@ -81,8 +81,8 @@ export default function AdminConfiguracoes() {
             <Download className="w-4 h-4 mr-2" />
             Exportar
           </Button>
-          <Button 
-            onClick={saveConfig} 
+          <Button
+            onClick={saveConfig}
             disabled={isLoading}
             className="flex items-center gap-2"
           >
@@ -409,7 +409,11 @@ export default function AdminConfiguracoes() {
                   <Switch
                     checked={config.notifications.registrationConfirmation}
                     onCheckedChange={(checked) =>
-                      updateConfig("notifications", "registrationConfirmation", checked)
+                      updateConfig(
+                        "notifications",
+                        "registrationConfirmation",
+                        checked,
+                      )
                     }
                   />
                 </div>
@@ -439,7 +443,11 @@ export default function AdminConfiguracoes() {
                   <Switch
                     checked={config.notifications.adminNotifications}
                     onCheckedChange={(checked) =>
-                      updateConfig("notifications", "adminNotifications", checked)
+                      updateConfig(
+                        "notifications",
+                        "adminNotifications",
+                        checked,
+                      )
                     }
                   />
                 </div>
