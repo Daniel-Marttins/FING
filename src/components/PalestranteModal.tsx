@@ -3,26 +3,7 @@ import { Modal } from './Modal';
 import { Users, Linkedin, Twitter, ExternalLink, MapPin, Clock } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
-
-interface Palestrante {
-  nome: string;
-  cargo: string;
-  empresa?: string;
-  tema?: string;
-  bio?: string;
-  linkedin?: string;
-  twitter?: string;
-  foto?: string;
-  especialidades?: string[];
-  horario?: string;
-  palco?: string;
-}
-
-interface PalestranteModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  palestrante: Palestrante | null;
-}
+import { PalestranteModalProps } from '@/types';
 
 export function PalestranteModal({ isOpen, onClose, palestrante }: PalestranteModalProps) {
   if (!palestrante) return null;
@@ -31,8 +12,6 @@ export function PalestranteModal({ isOpen, onClose, palestrante }: PalestranteMo
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Detalhes do Palestrante"
-      size="lg"
     >
       <div className="p-6">
         <div className="flex flex-col md:flex-row gap-6">
