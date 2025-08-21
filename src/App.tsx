@@ -28,31 +28,43 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={
-            <Layout>
-              <Index />
-            </Layout>
-          } />
+          <Route
+            path="/"
+            element={
+              <Layout>
+                <Index />
+              </Layout>
+            }
+          />
 
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/*" element={
-            <ProtectedRoute>
-              <AdminLayout>
-                <Routes>
-                  <Route path="dashboard" element={<AdminDashboard />} />
-                  <Route path="palestrantes" element={<AdminPalestrantes />} />
-                  <Route path="info" element={<AdminInfo />} />
-                  <Route path="programacao" element={<AdminProgramacao />} />
-                  <Route path="realizacao" element={<AdminRealizacao />} />
-                  <Route path="localizacao" element={<AdminLocalizacao />} />
-                  <Route path="tema" element={<AdminTema />} />
-                  <Route path="configuracoes" element={<AdminConfiguracoes />} />
-                  <Route path="*" element={<AdminDashboard />} />
-                </Routes>
-              </AdminLayout>
-            </ProtectedRoute>
-          } />
+          <Route
+            path="/admin/*"
+            element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <Routes>
+                    <Route path="dashboard" element={<AdminDashboard />} />
+                    <Route
+                      path="palestrantes"
+                      element={<AdminPalestrantes />}
+                    />
+                    <Route path="info" element={<AdminInfo />} />
+                    <Route path="programacao" element={<AdminProgramacao />} />
+                    <Route path="realizacao" element={<AdminRealizacao />} />
+                    <Route path="localizacao" element={<AdminLocalizacao />} />
+                    <Route path="tema" element={<AdminTema />} />
+                    <Route
+                      path="configuracoes"
+                      element={<AdminConfiguracoes />}
+                    />
+                    <Route path="*" element={<AdminDashboard />} />
+                  </Routes>
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
