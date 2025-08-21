@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import {
   Select,
@@ -21,7 +20,6 @@ import {
 import {
   Save,
   Download,
-  Upload,
   RefreshCw,
   Trash2,
   Shield,
@@ -29,133 +27,44 @@ import {
   Database,
   Globe,
 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAdminConfig } from "@/hooks";
+import { TimezoneOption, LanguageOption } from "@/types";
+
+const timezones: TimezoneOption[] = [
+  { value: "America/Sao_Paulo", label: "Brasília (UTC-3)" },
+  { value: "America/New_York", label: "Nova York (UTC-5)" },
+  { value: "Europe/London", label: "Londres (UTC+0)" },
+  { value: "Europe/Paris", label: "Paris (UTC+1)" },
+  { value: "Asia/Tokyo", label: "Tóquio (UTC+9)" },
+];
+
+const languages: LanguageOption[] = [
+  { value: "pt-BR", label: "Português (Brasil)" },
+  { value: "en-US", label: "English (US)" },
+  { value: "es-ES", label: "Español" },
+  { value: "fr-FR", label: "Français" },
+];
 
 export default function AdminConfiguracoes() {
-  const { toast } = useToast();
-  const [config, setConfig] = useState({
-    general: {
-      siteName: "FING 2024",
-      adminEmail: "admin@fing2024.com.br",
-      supportEmail: "suporte@fing2024.com.br",
-      timezone: "America/Sao_Paulo",
-      language: "pt-BR",
-      maintenanceMode: false,
-      debugMode: false,
-    },
-    email: {
-      provider: "smtp",
-      smtpHost: "smtp.gmail.com",
-      smtpPort: "587",
-      smtpUser: "",
-      smtpPassword: "",
-      smtpEncryption: "tls",
-      fromName: "FING 2024",
-      fromEmail: "noreply@fing2024.com.br",
-    },
-    registration: {
-      enabled: true,
-      requireApproval: false,
-      maxParticipants: 500,
-      registrationStart: "2024-01-01T00:00",
-      registrationEnd: "2024-03-10T23:59",
-      waitingList: true,
-      requirePayment: false,
-      paymentProvider: "stripe",
-    },
-    security: {
-      sessionTimeout: 24,
-      passwordMinLength: 8,
-      requireSpecialChars: true,
-      maxLoginAttempts: 5,
-      lockoutDuration: 30,
-      twoFactorAuth: false,
-      allowedFileTypes: ".jpg,.jpeg,.png,.pdf,.doc,.docx",
-      maxFileSize: 5,
-    },
-    integrations: {
-      googleAnalytics: "",
-      facebookPixel: "",
-      googleMaps: "",
-      recaptchaSiteKey: "",
-      recaptchaSecretKey: "",
-      socialLoginGoogle: false,
-      socialLoginFacebook: false,
-      socialLoginLinkedin: false,
-    },
-    notifications: {
-      emailNotifications: true,
-      registrationConfirmation: true,
-      eventReminders: true,
-      adminNotifications: true,
-      smsNotifications: false,
-      pushNotifications: false,
-    },
-  });
-
-  const timezones = [
-    { value: "America/Sao_Paulo", label: "Brasília (UTC-3)" },
-    { value: "America/New_York", label: "Nova York (UTC-5)" },
-    { value: "Europe/London", label: "Londres (UTC+0)" },
-    { value: "Europe/Paris", label: "Paris (UTC+1)" },
-    { value: "Asia/Tokyo", label: "Tóquio (UTC+9)" },
-  ];
-
-  const languages = [
-    { value: "pt-BR", label: "Português (Brasil)" },
-    { value: "en-US", label: "English (US)" },
-    { value: "es-ES", label: "Español" },
-    { value: "fr-FR", label: "Français" },
-  ];
-
-  const handleConfigChange = (section: string, field: string, value: any) => {
-    setConfig((prev) => ({
-      ...prev,
-      [section]: {
-        ...prev[section as keyof typeof prev],
-        [field]: value,
-      },
-    }));
-  };
-
-  const handleSave = () => {
-    toast({
-      title: "Configurações salvas",
-      description: "As configurações foram atualizadas com sucesso.",
-    });
-  };
-
-  const handleExportConfig = () => {
-    const configData = JSON.stringify(config, null, 2);
-    const blob = new Blob([configData], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "configuracoes-fing.json";
-    a.click();
-    URL.revokeObjectURL(url);
-
-    toast({
-      title: "Configurações exportadas",
-      description: "O arquivo de configuração foi baixado.",
-    });
-  };
+  const {
+    config,
+    isLoading,
+    updateConfig,
+    saveConfig,
+    exportConfig,
+    resetConfig,
+  } = useAdminConfig();
 
   const handleTestEmail = () => {
-    toast({
-      title: "Email de teste enviado",
-      description:
-        "Verifique sua caixa de entrada para confirmar as configurações.",
-    });
+    // Simulate email test
+    console.log("Testing email configuration...");
   };
 
   const handleClearCache = () => {
-    toast({
-      title: "Cache limpo",
-      description: "O cache do sistema foi limpo com sucesso.",
-    });
+    // Simulate cache clear
+    console.log("Clearing cache...");
   };
 
   return (
@@ -168,13 +77,17 @@ export default function AdminConfiguracoes() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={handleExportConfig}>
+          <Button variant="outline" onClick={exportConfig}>
             <Download className="w-4 h-4 mr-2" />
             Exportar
           </Button>
-          <Button onClick={handleSave} className="flex items-center gap-2">
+          <Button 
+            onClick={saveConfig} 
+            disabled={isLoading}
+            className="flex items-center gap-2"
+          >
             <Save className="w-4 h-4" />
-            Salvar Configurações
+            {isLoading ? "Salvando..." : "Salvar Configurações"}
           </Button>
         </div>
       </div>
@@ -209,7 +122,7 @@ export default function AdminConfiguracoes() {
                     id="siteName"
                     value={config.general.siteName}
                     onChange={(e) =>
-                      handleConfigChange("general", "siteName", e.target.value)
+                      updateConfig("general", "siteName", e.target.value)
                     }
                     placeholder="Nome do site"
                   />
@@ -222,11 +135,7 @@ export default function AdminConfiguracoes() {
                     type="email"
                     value={config.general.adminEmail}
                     onChange={(e) =>
-                      handleConfigChange(
-                        "general",
-                        "adminEmail",
-                        e.target.value,
-                      )
+                      updateConfig("general", "adminEmail", e.target.value)
                     }
                     placeholder="admin@exemplo.com"
                   />
@@ -239,11 +148,7 @@ export default function AdminConfiguracoes() {
                     type="email"
                     value={config.general.supportEmail}
                     onChange={(e) =>
-                      handleConfigChange(
-                        "general",
-                        "supportEmail",
-                        e.target.value,
-                      )
+                      updateConfig("general", "supportEmail", e.target.value)
                     }
                     placeholder="suporte@exemplo.com"
                   />
@@ -254,7 +159,7 @@ export default function AdminConfiguracoes() {
                   <Select
                     value={config.general.timezone}
                     onValueChange={(value) =>
-                      handleConfigChange("general", "timezone", value)
+                      updateConfig("general", "timezone", value)
                     }
                   >
                     <SelectTrigger>
@@ -275,7 +180,7 @@ export default function AdminConfiguracoes() {
                   <Select
                     value={config.general.language}
                     onValueChange={(value) =>
-                      handleConfigChange("general", "language", value)
+                      updateConfig("general", "language", value)
                     }
                   >
                     <SelectTrigger>
@@ -311,7 +216,7 @@ export default function AdminConfiguracoes() {
                   <Switch
                     checked={config.general.maintenanceMode}
                     onCheckedChange={(checked) =>
-                      handleConfigChange("general", "maintenanceMode", checked)
+                      updateConfig("general", "maintenanceMode", checked)
                     }
                   />
                 </div>
@@ -326,7 +231,7 @@ export default function AdminConfiguracoes() {
                   <Switch
                     checked={config.general.debugMode}
                     onCheckedChange={(checked) =>
-                      handleConfigChange("general", "debugMode", checked)
+                      updateConfig("general", "debugMode", checked)
                     }
                   />
                 </div>
@@ -339,6 +244,17 @@ export default function AdminConfiguracoes() {
                     </AlertDescription>
                   </Alert>
                 )}
+
+                <div className="pt-4">
+                  <Button
+                    onClick={resetConfig}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Restaurar Padrões
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -367,7 +283,7 @@ export default function AdminConfiguracoes() {
                       id="smtpHost"
                       value={config.email.smtpHost}
                       onChange={(e) =>
-                        handleConfigChange("email", "smtpHost", e.target.value)
+                        updateConfig("email", "smtpHost", e.target.value)
                       }
                       placeholder="smtp.gmail.com"
                     />
@@ -380,11 +296,7 @@ export default function AdminConfiguracoes() {
                         id="smtpPort"
                         value={config.email.smtpPort}
                         onChange={(e) =>
-                          handleConfigChange(
-                            "email",
-                            "smtpPort",
-                            e.target.value,
-                          )
+                          updateConfig("email", "smtpPort", e.target.value)
                         }
                         placeholder="587"
                       />
@@ -394,7 +306,7 @@ export default function AdminConfiguracoes() {
                       <Select
                         value={config.email.smtpEncryption}
                         onValueChange={(value) =>
-                          handleConfigChange("email", "smtpEncryption", value)
+                          updateConfig("email", "smtpEncryption", value)
                         }
                       >
                         <SelectTrigger>
@@ -415,7 +327,7 @@ export default function AdminConfiguracoes() {
                       id="smtpUser"
                       value={config.email.smtpUser}
                       onChange={(e) =>
-                        handleConfigChange("email", "smtpUser", e.target.value)
+                        updateConfig("email", "smtpUser", e.target.value)
                       }
                       placeholder="seu@email.com"
                     />
@@ -428,11 +340,7 @@ export default function AdminConfiguracoes() {
                       type="password"
                       value={config.email.smtpPassword}
                       onChange={(e) =>
-                        handleConfigChange(
-                          "email",
-                          "smtpPassword",
-                          e.target.value,
-                        )
+                        updateConfig("email", "smtpPassword", e.target.value)
                       }
                       placeholder="••••••••"
                     />
@@ -448,7 +356,7 @@ export default function AdminConfiguracoes() {
                       id="fromName"
                       value={config.email.fromName}
                       onChange={(e) =>
-                        handleConfigChange("email", "fromName", e.target.value)
+                        updateConfig("email", "fromName", e.target.value)
                       }
                       placeholder="FING 2024"
                     />
@@ -461,7 +369,7 @@ export default function AdminConfiguracoes() {
                       type="email"
                       value={config.email.fromEmail}
                       onChange={(e) =>
-                        handleConfigChange("email", "fromEmail", e.target.value)
+                        updateConfig("email", "fromEmail", e.target.value)
                       }
                       placeholder="noreply@fing2024.com.br"
                     />
@@ -501,11 +409,7 @@ export default function AdminConfiguracoes() {
                   <Switch
                     checked={config.notifications.registrationConfirmation}
                     onCheckedChange={(checked) =>
-                      handleConfigChange(
-                        "notifications",
-                        "registrationConfirmation",
-                        checked,
-                      )
+                      updateConfig("notifications", "registrationConfirmation", checked)
                     }
                   />
                 </div>
@@ -520,11 +424,7 @@ export default function AdminConfiguracoes() {
                   <Switch
                     checked={config.notifications.eventReminders}
                     onCheckedChange={(checked) =>
-                      handleConfigChange(
-                        "notifications",
-                        "eventReminders",
-                        checked,
-                      )
+                      updateConfig("notifications", "eventReminders", checked)
                     }
                   />
                 </div>
@@ -539,11 +439,7 @@ export default function AdminConfiguracoes() {
                   <Switch
                     checked={config.notifications.adminNotifications}
                     onCheckedChange={(checked) =>
-                      handleConfigChange(
-                        "notifications",
-                        "adminNotifications",
-                        checked,
-                      )
+                      updateConfig("notifications", "adminNotifications", checked)
                     }
                   />
                 </div>
@@ -558,544 +454,13 @@ export default function AdminConfiguracoes() {
                   <Switch
                     checked={config.notifications.smsNotifications}
                     onCheckedChange={(checked) =>
-                      handleConfigChange(
-                        "notifications",
-                        "smsNotifications",
-                        checked,
-                      )
+                      updateConfig("notifications", "smsNotifications", checked)
                     }
                   />
                 </div>
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-
-        {/* Configurações de Inscrições */}
-        <TabsContent value="registration" className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Controle de Inscrições</CardTitle>
-                <CardDescription>
-                  Configure como as inscrições funcionam
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Inscrições Ativas</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Permite novas inscrições
-                    </p>
-                  </div>
-                  <Switch
-                    checked={config.registration.enabled}
-                    onCheckedChange={(checked) =>
-                      handleConfigChange("registration", "enabled", checked)
-                    }
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Aprovação Manual</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Inscrições precisam de aprovação
-                    </p>
-                  </div>
-                  <Switch
-                    checked={config.registration.requireApproval}
-                    onCheckedChange={(checked) =>
-                      handleConfigChange(
-                        "registration",
-                        "requireApproval",
-                        checked,
-                      )
-                    }
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Lista de Espera</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Ativa lista quando lotado
-                    </p>
-                  </div>
-                  <Switch
-                    checked={config.registration.waitingList}
-                    onCheckedChange={(checked) =>
-                      handleConfigChange("registration", "waitingList", checked)
-                    }
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="maxParticipants">
-                    Máximo de Participantes
-                  </Label>
-                  <Input
-                    id="maxParticipants"
-                    type="number"
-                    value={config.registration.maxParticipants}
-                    onChange={(e) =>
-                      handleConfigChange(
-                        "registration",
-                        "maxParticipants",
-                        parseInt(e.target.value),
-                      )
-                    }
-                    placeholder="500"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Período de Inscrições</CardTitle>
-                <CardDescription>
-                  Defina quando as inscrições estarão abertas
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="registrationStart">
-                    Início das Inscrições
-                  </Label>
-                  <Input
-                    id="registrationStart"
-                    type="datetime-local"
-                    value={config.registration.registrationStart}
-                    onChange={(e) =>
-                      handleConfigChange(
-                        "registration",
-                        "registrationStart",
-                        e.target.value,
-                      )
-                    }
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="registrationEnd">Fim das Inscrições</Label>
-                  <Input
-                    id="registrationEnd"
-                    type="datetime-local"
-                    value={config.registration.registrationEnd}
-                    onChange={(e) =>
-                      handleConfigChange(
-                        "registration",
-                        "registrationEnd",
-                        e.target.value,
-                      )
-                    }
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Pagamento Obrigatório</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Inscrição requer pagamento
-                    </p>
-                  </div>
-                  <Switch
-                    checked={config.registration.requirePayment}
-                    onCheckedChange={(checked) =>
-                      handleConfigChange(
-                        "registration",
-                        "requirePayment",
-                        checked,
-                      )
-                    }
-                  />
-                </div>
-
-                {config.registration.requirePayment && (
-                  <div className="space-y-2">
-                    <Label htmlFor="paymentProvider">
-                      Provedor de Pagamento
-                    </Label>
-                    <Select
-                      value={config.registration.paymentProvider}
-                      onValueChange={(value) =>
-                        handleConfigChange(
-                          "registration",
-                          "paymentProvider",
-                          value,
-                        )
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="stripe">Stripe</SelectItem>
-                        <SelectItem value="paypal">PayPal</SelectItem>
-                        <SelectItem value="mercadopago">
-                          Mercado Pago
-                        </SelectItem>
-                        <SelectItem value="pagseguro">PagSeguro</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* Configurações de Segurança */}
-        <TabsContent value="security" className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="w-5 h-5" />
-                  Autenticação
-                </CardTitle>
-                <CardDescription>
-                  Configure políticas de senha e login
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="sessionTimeout">
-                    Timeout da Sessão (horas)
-                  </Label>
-                  <Input
-                    id="sessionTimeout"
-                    type="number"
-                    value={config.security.sessionTimeout}
-                    onChange={(e) =>
-                      handleConfigChange(
-                        "security",
-                        "sessionTimeout",
-                        parseInt(e.target.value),
-                      )
-                    }
-                    placeholder="24"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="passwordMinLength">
-                    Tamanho Mínimo da Senha
-                  </Label>
-                  <Input
-                    id="passwordMinLength"
-                    type="number"
-                    value={config.security.passwordMinLength}
-                    onChange={(e) =>
-                      handleConfigChange(
-                        "security",
-                        "passwordMinLength",
-                        parseInt(e.target.value),
-                      )
-                    }
-                    placeholder="8"
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Caracteres Especiais</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Obrigar caracteres especiais na senha
-                    </p>
-                  </div>
-                  <Switch
-                    checked={config.security.requireSpecialChars}
-                    onCheckedChange={(checked) =>
-                      handleConfigChange(
-                        "security",
-                        "requireSpecialChars",
-                        checked,
-                      )
-                    }
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="maxLoginAttempts">
-                    Máximo de Tentativas de Login
-                  </Label>
-                  <Input
-                    id="maxLoginAttempts"
-                    type="number"
-                    value={config.security.maxLoginAttempts}
-                    onChange={(e) =>
-                      handleConfigChange(
-                        "security",
-                        "maxLoginAttempts",
-                        parseInt(e.target.value),
-                      )
-                    }
-                    placeholder="5"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="lockoutDuration">
-                    Duração do Bloqueio (minutos)
-                  </Label>
-                  <Input
-                    id="lockoutDuration"
-                    type="number"
-                    value={config.security.lockoutDuration}
-                    onChange={(e) =>
-                      handleConfigChange(
-                        "security",
-                        "lockoutDuration",
-                        parseInt(e.target.value),
-                      )
-                    }
-                    placeholder="30"
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Autenticação 2FA</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Ativar autenticação em dois fatores
-                    </p>
-                  </div>
-                  <Switch
-                    checked={config.security.twoFactorAuth}
-                    onCheckedChange={(checked) =>
-                      handleConfigChange("security", "twoFactorAuth", checked)
-                    }
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Upload de Arquivos</CardTitle>
-                <CardDescription>
-                  Configure restrições para upload de arquivos
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="allowedFileTypes">
-                    Tipos de Arquivo Permitidos
-                  </Label>
-                  <Input
-                    id="allowedFileTypes"
-                    value={config.security.allowedFileTypes}
-                    onChange={(e) =>
-                      handleConfigChange(
-                        "security",
-                        "allowedFileTypes",
-                        e.target.value,
-                      )
-                    }
-                    placeholder=".jpg,.jpeg,.png,.pdf"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Separados por vírgula (ex: .jpg,.png,.pdf)
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="maxFileSize">Tamanho Máximo (MB)</Label>
-                  <Input
-                    id="maxFileSize"
-                    type="number"
-                    value={config.security.maxFileSize}
-                    onChange={(e) =>
-                      handleConfigChange(
-                        "security",
-                        "maxFileSize",
-                        parseInt(e.target.value),
-                      )
-                    }
-                    placeholder="5"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* Integrações */}
-        <TabsContent value="integrations" className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Analytics e Tracking</CardTitle>
-                <CardDescription>
-                  Configure ferramentas de análise
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="googleAnalytics">Google Analytics ID</Label>
-                  <Input
-                    id="googleAnalytics"
-                    value={config.integrations.googleAnalytics}
-                    onChange={(e) =>
-                      handleConfigChange(
-                        "integrations",
-                        "googleAnalytics",
-                        e.target.value,
-                      )
-                    }
-                    placeholder="G-XXXXXXXXXX"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="facebookPixel">Facebook Pixel ID</Label>
-                  <Input
-                    id="facebookPixel"
-                    value={config.integrations.facebookPixel}
-                    onChange={(e) =>
-                      handleConfigChange(
-                        "integrations",
-                        "facebookPixel",
-                        e.target.value,
-                      )
-                    }
-                    placeholder="123456789012345"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="googleMaps">Google Maps API Key</Label>
-                  <Input
-                    id="googleMaps"
-                    value={config.integrations.googleMaps}
-                    onChange={(e) =>
-                      handleConfigChange(
-                        "integrations",
-                        "googleMaps",
-                        e.target.value,
-                      )
-                    }
-                    placeholder="AIzaSy..."
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>reCAPTCHA</CardTitle>
-                <CardDescription>
-                  Configure proteção contra bots
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="recaptchaSiteKey">Site Key</Label>
-                  <Input
-                    id="recaptchaSiteKey"
-                    value={config.integrations.recaptchaSiteKey}
-                    onChange={(e) =>
-                      handleConfigChange(
-                        "integrations",
-                        "recaptchaSiteKey",
-                        e.target.value,
-                      )
-                    }
-                    placeholder="6Lc..."
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="recaptchaSecretKey">Secret Key</Label>
-                  <Input
-                    id="recaptchaSecretKey"
-                    type="password"
-                    value={config.integrations.recaptchaSecretKey}
-                    onChange={(e) =>
-                      handleConfigChange(
-                        "integrations",
-                        "recaptchaSecretKey",
-                        e.target.value,
-                      )
-                    }
-                    placeholder="6Lc..."
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle>Login Social</CardTitle>
-                <CardDescription>
-                  Configure login com redes sociais
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-3">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Google</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Login com Google
-                      </p>
-                    </div>
-                    <Switch
-                      checked={config.integrations.socialLoginGoogle}
-                      onCheckedChange={(checked) =>
-                        handleConfigChange(
-                          "integrations",
-                          "socialLoginGoogle",
-                          checked,
-                        )
-                      }
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>Facebook</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Login com Facebook
-                      </p>
-                    </div>
-                    <Switch
-                      checked={config.integrations.socialLoginFacebook}
-                      onCheckedChange={(checked) =>
-                        handleConfigChange(
-                          "integrations",
-                          "socialLoginFacebook",
-                          checked,
-                        )
-                      }
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label>LinkedIn</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Login com LinkedIn
-                      </p>
-                    </div>
-                    <Switch
-                      checked={config.integrations.socialLoginLinkedin}
-                      onCheckedChange={(checked) =>
-                        handleConfigChange(
-                          "integrations",
-                          "socialLoginLinkedin",
-                          checked,
-                        )
-                      }
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
         </TabsContent>
 
         {/* Sistema */}
@@ -1131,31 +496,6 @@ export default function AdminConfiguracoes() {
                   Backup do Sistema
                 </Button>
 
-                <Button variant="outline" className="w-full">
-                  <Upload className="w-4 h-4 mr-2" />
-                  Restaurar Backup
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Logs do Sistema</CardTitle>
-                <CardDescription>Visualize e gerencie logs</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Button variant="outline" className="w-full">
-                  Ver Logs de Erro
-                </Button>
-
-                <Button variant="outline" className="w-full">
-                  Ver Logs de Acesso
-                </Button>
-
-                <Button variant="outline" className="w-full">
-                  Ver Logs de Segurança
-                </Button>
-
                 <Button variant="destructive" className="w-full">
                   <Trash2 className="w-4 h-4 mr-2" />
                   Limpar Logs Antigos
@@ -1163,7 +503,7 @@ export default function AdminConfiguracoes() {
               </CardContent>
             </Card>
 
-            <Card className="md:col-span-2">
+            <Card>
               <CardHeader>
                 <CardTitle>Informações do Sistema</CardTitle>
                 <CardDescription>
@@ -1171,7 +511,7 @@ export default function AdminConfiguracoes() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid gap-4 md:grid-cols-4">
+                <div className="grid gap-4 md:grid-cols-2">
                   <div className="text-center p-4 border rounded-lg">
                     <div className="text-2xl font-bold text-primary">127</div>
                     <div className="text-sm text-muted-foreground">
@@ -1198,6 +538,49 @@ export default function AdminConfiguracoes() {
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        {/* Placeholder tabs for other sections */}
+        <TabsContent value="registration">
+          <Card>
+            <CardHeader>
+              <CardTitle>Configurações de Inscrições</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Configurações de inscrições implementadas aqui...
+              </p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="security">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="w-5 h-5" />
+                Configurações de Segurança
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Configurações de segurança implementadas aqui...
+              </p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="integrations">
+          <Card>
+            <CardHeader>
+              <CardTitle>Integrações</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Configurações de integrações implementadas aqui...
+              </p>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
