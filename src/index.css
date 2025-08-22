@@ -280,7 +280,7 @@
     transform: none !important;
   }
 
-  .organizer-item:hover .organizer-icon {
+  .organizer-item:hover img {
     transform: none !important;
   }
 }
