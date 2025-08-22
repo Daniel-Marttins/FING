@@ -210,9 +210,13 @@ export default function Index() {
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-foreground to-accent bg-clip-text text-transparent leading-tight">
+            <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-primary via-foreground to-accent bg-clip-text text-transparent leading-tight">
               FING 2024
             </h1>
+
+            <p className="text-lg md:text-xl text-muted-foreground/80 mb-6 font-medium">
+              Comunidade Sete Colinas
+            </p>
 
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
               Conectando empreendedores, inovadores e visionários no coração de
@@ -236,7 +240,7 @@ export default function Index() {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Button size="lg" className="group transition-all duration-300">
                 Garanta sua vaga
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
@@ -248,6 +252,38 @@ export default function Index() {
               >
                 Ver programação
               </Button>
+            </div>
+
+            {/* Organizadores Principais */}
+            <div className="bg-background/60 backdrop-blur-sm border border-border/40 rounded-xl p-6 max-w-lg mx-auto">
+              <p className="text-sm text-muted-foreground mb-4 text-center">
+                Organizadores Principais
+              </p>
+              <div className="flex items-center justify-center gap-6">
+                {/* Comunidade Sete Colinas */}
+                <div className="flex flex-col items-center space-y-2">
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg flex items-center justify-center">
+                    <Building className="w-6 h-6 text-primary" />
+                  </div>
+                  <span className="text-xs text-center font-medium">Comunidade<br />Sete Colinas</span>
+                </div>
+
+                {/* Sebrae */}
+                <div className="flex flex-col items-center space-y-2">
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg flex items-center justify-center">
+                    <Building className="w-6 h-6 text-primary" />
+                  </div>
+                  <span className="text-xs text-center font-medium">Sebrae</span>
+                </div>
+
+                {/* Sesc - Fecomercio */}
+                <div className="flex flex-col items-center space-y-2">
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg flex items-center justify-center">
+                    <Building className="w-6 h-6 text-primary" />
+                  </div>
+                  <span className="text-xs text-center font-medium">Sesc<br />Fecomercio</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
