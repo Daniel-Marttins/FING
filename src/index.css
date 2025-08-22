@@ -105,6 +105,43 @@
     width: 100%;
   }
 
+  /* Organizers box styling */
+  .organizers-box {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      0 1px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .dark .organizers-box {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .organizer-item {
+    transition: all 0.3s ease-out;
+  }
+
+  .organizer-item:hover {
+    transform: translateY(-2px);
+  }
+
+  .organizer-item:hover .organizer-icon {
+    transform: scale(1.1);
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.3), hsl(var(--accent) / 0.3));
+  }
+
+  .organizer-icon {
+    transition: all 0.3s ease-out;
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.2), hsl(var(--accent) / 0.2));
+  }
+
   /* Optimized transition utilities */
   .transition-optimized {
     transition-property: transform, opacity;
@@ -239,6 +276,14 @@
   .underline-hover::after {
     transition: none !important;
   }
+
+  .organizer-item:hover {
+    transform: none !important;
+  }
+
+  .organizer-item:hover .organizer-icon {
+    transform: none !important;
+  }
 }
 
 /* Focus styles for accessibility */
@@ -300,6 +345,20 @@ html {
   .logo-hover:hover {
     transform: scale(1.05);
   }
+
+  /* Floating animation for hero elements */
+  .float-subtle {
+    animation: floatSubtle 3s ease-in-out infinite;
+  }
+
+  @keyframes floatSubtle {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
 }
 
 /* Improved blur effects for better performance */
@@ -352,5 +411,10 @@ html {
   .text-gradient {
     -webkit-text-fill-color: black !important;
     color: black !important;
+  }
+
+  .organizers-box {
+    background: white !important;
+    border: 1px solid black !important;
   }
 }
