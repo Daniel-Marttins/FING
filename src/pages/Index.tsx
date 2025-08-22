@@ -255,11 +255,11 @@ export default function Index() {
             </div>
 
             {/* Organizadores Principais */}
-            <div className="organizers-box rounded-full px-4 py-3 max-w-sm mx-auto">
-              <div className="flex items-center justify-center gap-4">
+            <div className="organizers-box rounded-full px-3 py-2 max-w-xs mx-auto">
+              <div className="flex items-center justify-center gap-3">
                 {/* Comunidade Sete Colinas */}
                 <div className="organizer-item">
-                  <div className="w-10 h-10 rounded-full overflow-hidden bg-white flex items-center justify-center p-1">
+                  <div className="w-8 h-8 rounded-full overflow-hidden bg-white flex items-center justify-center p-0.5 shadow-sm">
                     <img
                       src="https://cdn.builder.io/api/v1/image/assets%2F42e34fe79f13424399d236fc2c7311f6%2F98b800f786a842de9a050b48b295bcf5?format=webp&width=800"
                       alt="Comunidade Sete Colinas"
@@ -270,7 +270,7 @@ export default function Index() {
 
                 {/* Sebrae */}
                 <div className="organizer-item">
-                  <div className="w-10 h-10 rounded-full overflow-hidden bg-white flex items-center justify-center p-1">
+                  <div className="w-8 h-8 rounded-full overflow-hidden bg-white flex items-center justify-center p-0.5 shadow-sm">
                     <img
                       src="https://cdn.builder.io/api/v1/image/assets%2F42e34fe79f13424399d236fc2c7311f6%2F991fa61d52e849759d1e2eec3955b336?format=webp&width=800"
                       alt="Sebrae"
@@ -281,7 +281,7 @@ export default function Index() {
 
                 {/* Sesc - Fecomercio */}
                 <div className="organizer-item">
-                  <div className="w-10 h-10 rounded-full overflow-hidden bg-white flex items-center justify-center p-1">
+                  <div className="w-8 h-8 rounded-full overflow-hidden bg-white flex items-center justify-center p-0.5 shadow-sm">
                     <img
                       src="https://cdn.builder.io/api/v1/image/assets%2F42e34fe79f13424399d236fc2c7311f6%2F4ad3ebb261b14ef1b66f0af981332e53?format=webp&width=800"
                       alt="Sesc Fecomercio"
