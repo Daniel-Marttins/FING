@@ -255,33 +255,33 @@ export default function Index() {
             </div>
 
             {/* Organizadores Principais */}
-            <div className="bg-background/60 backdrop-blur-sm border border-border/40 rounded-xl p-6 max-w-lg mx-auto">
-              <p className="text-sm text-muted-foreground mb-4 text-center">
+            <div className="organizers-box rounded-xl p-6 max-w-lg mx-auto">
+              <p className="text-sm text-muted-foreground mb-4 text-center font-medium">
                 Organizadores Principais
               </p>
               <div className="flex items-center justify-center gap-6">
                 {/* Comunidade Sete Colinas */}
-                <div className="flex flex-col items-center space-y-2">
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg flex items-center justify-center">
+                <div className="organizer-item flex flex-col items-center space-y-2">
+                  <div className="organizer-icon w-12 h-12 rounded-lg flex items-center justify-center">
                     <Building className="w-6 h-6 text-primary" />
                   </div>
-                  <span className="text-xs text-center font-medium">Comunidade<br />Sete Colinas</span>
+                  <span className="text-xs text-center font-medium leading-tight">Comunidade<br />Sete Colinas</span>
                 </div>
 
                 {/* Sebrae */}
-                <div className="flex flex-col items-center space-y-2">
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg flex items-center justify-center">
+                <div className="organizer-item flex flex-col items-center space-y-2">
+                  <div className="organizer-icon w-12 h-12 rounded-lg flex items-center justify-center">
                     <Building className="w-6 h-6 text-primary" />
                   </div>
                   <span className="text-xs text-center font-medium">Sebrae</span>
                 </div>
 
                 {/* Sesc - Fecomercio */}
-                <div className="flex flex-col items-center space-y-2">
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg flex items-center justify-center">
+                <div className="organizer-item flex flex-col items-center space-y-2">
+                  <div className="organizer-icon w-12 h-12 rounded-lg flex items-center justify-center">
                     <Building className="w-6 h-6 text-primary" />
                   </div>
-                  <span className="text-xs text-center font-medium">Sesc<br />Fecomercio</span>
+                  <span className="text-xs text-center font-medium leading-tight">Sesc<br />Fecomercio</span>
                 </div>
               </div>
             </div>
