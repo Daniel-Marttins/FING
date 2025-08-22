@@ -1,73 +1,64 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { NavigationItem } from "@/types";
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import { NavigationItem } from '@/types';
+import { useScrollManager } from './useScrollManager';
 
 interface UseActiveSectionOptions {
   sections: NavigationItem[];
   offset?: number;
 }
 
-export function useActiveSection({
-  sections,
-  offset = 100,
-}: UseActiveSectionOptions) {
-  const [activeSection, setActiveSection] = useState<string>(
-    sections[0]?.href || "",
-  );
+export function useActiveSection({ sections, offset = 100 }: UseActiveSectionOptions) {
+  const [activeSection, setActiveSection] = useState<string>(sections[0]?.href || '');
+  const [isNavigating, setIsNavigating] = useState(false);
+  const { scrollY, isScrolling } = useScrollManager();
 
-  // Memoize the sections array to prevent re-creation
-  const sectionsArray = useMemo(
-    () => sections.map((nav) => nav.href),
-    [sections],
-  );
+  // Memoize sections array to prevent re-creation
+  const sectionsArray = useMemo(() => sections.map(nav => nav.href), [sections]);
 
-  const updateActiveSection = useCallback(() => {
-    const scrollPosition = window.scrollY + offset;
+  // Update active section based on scroll position
+  useEffect(() => {
+    // Don't update during navigation to prevent conflicts
+    if (isNavigating || isScrolling) return;
 
+    const scrollPosition = scrollY + offset;
+    
     for (let i = sectionsArray.length - 1; i >= 0; i--) {
       const element = document.querySelector(sectionsArray[i]);
       if (element) {
-        const offsetTop =
-          element.getBoundingClientRect().top + window.pageYOffset;
-        if (scrollPosition >= offsetTop) {
+        const rect = element.getBoundingClientRect();
+        const elementTop = rect.top + scrollY;
+        
+        if (scrollPosition >= elementTop) {
           setActiveSection(sectionsArray[i]);
           break;
         }
       }
     }
-  }, [sectionsArray, offset]);
-
-  useEffect(() => {
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          updateActiveSection();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    updateActiveSection(); // Check initial position
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [updateActiveSection]);
+  }, [scrollY, sectionsArray, offset, isNavigating, isScrolling]);
 
   const handleNavClick = useCallback((href: string) => {
     const element = document.querySelector(href);
-    if (element) {
-      const headerHeight = 64;
-      const elementPosition =
-        element.getBoundingClientRect().top + window.pageYOffset;
-      const offsetPosition = elementPosition - headerHeight;
+    if (!element) return;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-    }
+    // Immediately set as active to provide instant feedback
+    setActiveSection(href);
+    setIsNavigating(true);
+
+    const headerHeight = 64;
+    const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+    const targetPosition = elementPosition - headerHeight;
+
+    // Use native scrollTo for better performance
+    window.scrollTo({
+      top: targetPosition,
+      behavior: 'smooth'
+    });
+
+    // Reset navigation flag after scroll animation completes
+    setTimeout(() => {
+      setIsNavigating(false);
+    }, 800); // Slightly longer than typical smooth scroll duration
+
   }, []);
 
   return { activeSection, handleNavClick };

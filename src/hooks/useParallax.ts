@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useMemo, useCallback } from 'react';
+import { useScrollManager } from './useScrollManager';
 
 interface UseParallaxOptions {
   speed?: number;
@@ -8,67 +9,38 @@ interface UseParallaxOptions {
 }
 
 export function useParallax(options: UseParallaxOptions = {}) {
-  const {
-    speed = 0.5,
+  const { 
+    speed = 0.5, 
     maxOffset = 200,
     targetElementId,
-    enabled = true,
+    enabled = true 
   } = options;
+  
+  const { scrollY } = useScrollManager();
 
-  const [offset, setOffset] = useState(0);
-
-  const updateParallax = useCallback(() => {
-    if (!enabled || document.hidden) return;
-
-    const scrollY = window.scrollY;
+  const offset = useMemo(() => {
+    if (!enabled) return 0;
 
     if (targetElementId) {
       const targetElement = document.getElementById(targetElementId);
       if (targetElement) {
         const elementHeight = targetElement.offsetHeight;
-        const currentScrollY = scrollY;
-
+        
         // Only apply parallax when within the target element
-        if (currentScrollY <= elementHeight) {
-          const newOffset = Math.min(currentScrollY * speed, maxOffset);
-          setOffset(newOffset);
-        } else if (offset !== 0) {
-          setOffset(0); // Reset when outside target area
+        if (scrollY <= elementHeight) {
+          return Math.min(scrollY * speed, maxOffset);
         }
       }
-    } else {
-      const newOffset = Math.min(scrollY * speed, maxOffset);
-      setOffset(newOffset);
+      return 0;
     }
-  }, [speed, maxOffset, targetElementId, enabled, offset]);
+    
+    return Math.min(scrollY * speed, maxOffset);
+  }, [scrollY, speed, maxOffset, targetElementId, enabled]);
 
-  useEffect(() => {
-    if (!enabled) return;
-
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          updateParallax();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [updateParallax, enabled]);
-
-  const parallaxStyle = useMemo(
-    () => ({
-      transform: `translate3d(0, ${offset}px, 0)`,
-      willChange: "transform",
-    }),
-    [offset],
-  );
+  const parallaxStyle = useMemo(() => ({
+    transform: `translate3d(0, ${offset}px, 0)`,
+    willChange: enabled ? 'transform' : 'auto'
+  }), [offset, enabled]);
 
   return { offset, parallaxStyle };
 }
