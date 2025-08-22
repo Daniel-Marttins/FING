@@ -1,39 +1,26 @@
-import React from 'react';
-import { Modal } from './Modal';
-import { Users, Linkedin, Twitter, ExternalLink, MapPin, Clock } from 'lucide-react';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
+import React from "react";
+import { Modal } from "./Modal";
+import {
+  Users,
+  Linkedin,
+  Twitter,
+  ExternalLink,
+  MapPin,
+  Clock,
+} from "lucide-react";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { PalestranteModalProps } from "@/types";
 
-interface Palestrante {
-  nome: string;
-  cargo: string;
-  empresa?: string;
-  tema?: string;
-  bio?: string;
-  linkedin?: string;
-  twitter?: string;
-  foto?: string;
-  especialidades?: string[];
-  horario?: string;
-  palco?: string;
-}
-
-interface PalestranteModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  palestrante: Palestrante | null;
-}
-
-export function PalestranteModal({ isOpen, onClose, palestrante }: PalestranteModalProps) {
+export function PalestranteModal({
+  isOpen,
+  onClose,
+  palestrante,
+}: PalestranteModalProps) {
   if (!palestrante) return null;
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Detalhes do Palestrante"
-      size="lg"
-    >
+    <Modal isOpen={isOpen} onClose={onClose}>
       <div className="p-6">
         <div className="flex flex-col md:flex-row gap-6">
           {/* Foto e informações básicas */}
@@ -41,19 +28,27 @@ export function PalestranteModal({ isOpen, onClose, palestrante }: PalestranteMo
             <div className="w-32 h-32 md:w-40 md:h-40 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl flex items-center justify-center mx-auto md:mx-0">
               <Users className="w-16 h-16 text-primary" />
             </div>
-            
+
             {/* Redes sociais */}
             <div className="flex gap-2 mt-4 justify-center md:justify-start">
               {palestrante.linkedin && (
                 <Button variant="outline" size="sm" asChild>
-                  <a href={palestrante.linkedin} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={palestrante.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Linkedin className="w-4 h-4" />
                   </a>
                 </Button>
               )}
               {palestrante.twitter && (
                 <Button variant="outline" size="sm" asChild>
-                  <a href={palestrante.twitter} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={palestrante.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Twitter className="w-4 h-4" />
                   </a>
                 </Button>
@@ -65,7 +60,9 @@ export function PalestranteModal({ isOpen, onClose, palestrante }: PalestranteMo
           <div className="flex-1 space-y-4">
             <div>
               <h3 className="text-2xl font-bold mb-2">{palestrante.nome}</h3>
-              <p className="text-primary font-medium text-lg">{palestrante.cargo}</p>
+              <p className="text-primary font-medium text-lg">
+                {palestrante.cargo}
+              </p>
               {palestrante.empresa && (
                 <p className="text-muted-foreground">{palestrante.empresa}</p>
               )}
@@ -78,7 +75,9 @@ export function PalestranteModal({ isOpen, onClose, palestrante }: PalestranteMo
                   <ExternalLink className="w-4 h-4" />
                   Palestra
                 </h4>
-                <p className="text-muted-foreground italic">"{palestrante.tema}"</p>
+                <p className="text-muted-foreground italic">
+                  "{palestrante.tema}"
+                </p>
               </div>
             )}
 

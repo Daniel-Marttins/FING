@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2, Clock, MapPin, User } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
   DialogContent,
@@ -28,157 +27,24 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-interface ProgramEvent {
-  id: string;
-  title: string;
-  description: string;
-  speaker: string;
-  speakerId?: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-  location: string;
-  type: "palestra" | "workshop" | "painel" | "networking" | "break";
-  capacity?: number;
-}
+import { useEventManagement } from "@/hooks";
+import { ProgramEvent } from "@/types";
 
 export default function AdminProgramacao() {
-  const { toast } = useToast();
-  const [events, setEvents] = useState<ProgramEvent[]>([
-    {
-      id: "1",
-      title: "Abertura do Evento",
-      description: "Cerimônia de abertura com apresentação da programação",
-      speaker: "Organização FING",
-      date: "2024-03-15",
-      startTime: "09:00",
-      endTime: "09:30",
-      location: "Auditório Principal",
-      type: "networking",
-    },
-    {
-      id: "2",
-      title: "O Futuro da Inteligência Artificial",
-      description: "Palestra sobre as tendências e impactos da IA na sociedade",
-      speaker: "Dr. João Silva",
-      speakerId: "joao-silva",
-      date: "2024-03-15",
-      startTime: "10:00",
-      endTime: "11:00",
-      location: "Auditório Principal",
-      type: "palestra",
-      capacity: 200,
-    },
-  ]);
-
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingEvent, setEditingEvent] = useState<ProgramEvent | null>(null);
-  const [formData, setFormData] = useState<Partial<ProgramEvent>>({});
-
-  const eventTypes = [
-    { value: "palestra", label: "Palestra", color: "bg-blue-500" },
-    { value: "workshop", label: "Workshop", color: "bg-green-500" },
-    { value: "painel", label: "Painel", color: "bg-purple-500" },
-    { value: "networking", label: "Networking", color: "bg-orange-500" },
-    { value: "break", label: "Intervalo", color: "bg-gray-500" },
-  ];
-
-  const getTypeColor = (type: string) => {
-    return eventTypes.find((t) => t.value === type)?.color || "bg-gray-500";
-  };
-
-  const getTypeLabel = (type: string) => {
-    return eventTypes.find((t) => t.value === type)?.label || type;
-  };
-
-  const handleOpenDialog = (event?: ProgramEvent) => {
-    if (event) {
-      setEditingEvent(event);
-      setFormData(event);
-    } else {
-      setEditingEvent(null);
-      setFormData({
-        title: "",
-        description: "",
-        speaker: "",
-        date: "",
-        startTime: "",
-        endTime: "",
-        location: "",
-        type: "palestra",
-      });
-    }
-    setIsDialogOpen(true);
-  };
-
-  const handleSaveEvent = () => {
-    if (
-      !formData.title ||
-      !formData.date ||
-      !formData.startTime ||
-      !formData.endTime
-    ) {
-      toast({
-        title: "Erro",
-        description: "Preencha todos os campos obrigatórios.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (editingEvent) {
-      setEvents((prev) =>
-        prev.map((event) =>
-          event.id === editingEvent.id
-            ? ({ ...event, ...formData } as ProgramEvent)
-            : event,
-        ),
-      );
-      toast({
-        title: "Evento atualizado",
-        description: "O evento foi atualizado com sucesso.",
-      });
-    } else {
-      const newEvent: ProgramEvent = {
-        id: Date.now().toString(),
-        ...(formData as ProgramEvent),
-      };
-      setEvents((prev) => [...prev, newEvent]);
-      toast({
-        title: "Evento criado",
-        description: "O evento foi criado com sucesso.",
-      });
-    }
-
-    setIsDialogOpen(false);
-  };
-
-  const handleDeleteEvent = (eventId: string) => {
-    setEvents((prev) => prev.filter((event) => event.id !== eventId));
-    toast({
-      title: "Evento removido",
-      description: "O evento foi removido da programação.",
-    });
-  };
-
-  const sortedEvents = events.sort((a, b) => {
-    const dateA = new Date(`${a.date} ${a.startTime}`);
-    const dateB = new Date(`${b.date} ${b.startTime}`);
-    return dateA.getTime() - dateB.getTime();
-  });
-
-  const groupedEvents = sortedEvents.reduce(
-    (groups, event) => {
-      const date = event.date;
-      if (!groups[date]) {
-        groups[date] = [];
-      }
-      groups[date].push(event);
-      return groups;
-    },
-    {} as Record<string, ProgramEvent[]>,
-  );
+  const {
+    groupedEvents,
+    eventTypes,
+    isDialogOpen,
+    editingEvent,
+    formData,
+    setIsDialogOpen,
+    getTypeColor,
+    getTypeLabel,
+    handleOpenDialog,
+    handleSaveEvent,
+    handleDeleteEvent,
+    updateFormData,
+  } = useEventManagement();
 
   return (
     <div className="space-y-6">
@@ -218,12 +84,7 @@ export default function AdminProgramacao() {
                   <Input
                     id="title"
                     value={formData.title || ""}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        title: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => updateFormData("title", e.target.value)}
                     placeholder="Título do evento"
                   />
                 </div>
@@ -232,10 +93,7 @@ export default function AdminProgramacao() {
                   <Select
                     value={formData.type}
                     onValueChange={(value) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        type: value as ProgramEvent["type"],
-                      }))
+                      updateFormData("type", value as ProgramEvent["type"])
                     }
                   >
                     <SelectTrigger>
@@ -258,10 +116,7 @@ export default function AdminProgramacao() {
                   id="description"
                   value={formData.description || ""}
                   onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      description: e.target.value,
-                    }))
+                    updateFormData("description", e.target.value)
                   }
                   placeholder="Descrição do evento"
                   rows={3}
@@ -274,12 +129,7 @@ export default function AdminProgramacao() {
                   <Input
                     id="speaker"
                     value={formData.speaker || ""}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        speaker: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => updateFormData("speaker", e.target.value)}
                     placeholder="Nome do palestrante"
                   />
                 </div>
@@ -288,12 +138,7 @@ export default function AdminProgramacao() {
                   <Input
                     id="location"
                     value={formData.location || ""}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        location: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => updateFormData("location", e.target.value)}
                     placeholder="Local do evento"
                   />
                 </div>
@@ -306,9 +151,7 @@ export default function AdminProgramacao() {
                     id="date"
                     type="date"
                     value={formData.date || ""}
-                    onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, date: e.target.value }))
-                    }
+                    onChange={(e) => updateFormData("date", e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
@@ -318,10 +161,7 @@ export default function AdminProgramacao() {
                     type="time"
                     value={formData.startTime || ""}
                     onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        startTime: e.target.value,
-                      }))
+                      updateFormData("startTime", e.target.value)
                     }
                   />
                 </div>
@@ -331,12 +171,7 @@ export default function AdminProgramacao() {
                     id="endTime"
                     type="time"
                     value={formData.endTime || ""}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        endTime: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => updateFormData("endTime", e.target.value)}
                   />
                 </div>
               </div>
@@ -348,12 +183,10 @@ export default function AdminProgramacao() {
                   type="number"
                   value={formData.capacity || ""}
                   onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      capacity: e.target.value
-                        ? parseInt(e.target.value)
-                        : undefined,
-                    }))
+                    updateFormData(
+                      "capacity",
+                      e.target.value ? parseInt(e.target.value) : undefined,
+                    )
                   }
                   placeholder="Número máximo de participantes"
                 />
@@ -395,7 +228,7 @@ export default function AdminProgramacao() {
                 {dayEvents.map((event) => (
                   <div
                     key={event.id}
-                    className="flex items-center justify-between p-4 border rounded-lg"
+                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors duration-200"
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
@@ -440,6 +273,7 @@ export default function AdminProgramacao() {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleOpenDialog(event)}
+                        className="hover:bg-primary/10 transition-colors duration-200"
                       >
                         <Edit className="w-4 h-4" />
                       </Button>
@@ -447,7 +281,7 @@ export default function AdminProgramacao() {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleDeleteEvent(event.id)}
-                        className="text-destructive hover:text-destructive"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10 transition-colors duration-200"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
