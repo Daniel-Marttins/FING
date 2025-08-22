@@ -54,15 +54,13 @@ export function Layout({ children }: LayoutProps) {
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3">
               <div className="w-10 h-10 rounded-lg overflow-hidden flex items-center justify-center">
-                <img 
+                <img
                   src="https://cdn.builder.io/api/v1/image/assets%2F42e34fe79f13424399d236fc2c7311f6%2Feb31e9232fe94232aad18320963e5242?format=webp&width=800"
                   alt="FING 2024 Logo"
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="font-bold text-xl text-gradient">
-                FING 2024
-              </span>
+              <span className="font-bold text-xl text-gradient">FING 2024</span>
             </Link>
 
             {/* Desktop Navigation */}
@@ -74,11 +72,13 @@ export function Layout({ children }: LayoutProps) {
                   className="nav-link group relative px-2 py-2 text-sm font-medium text-foreground/80 hover:text-foreground transition-colors duration-300"
                 >
                   <span className="relative z-10">{item.name}</span>
-                  <div className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all duration-300 ease-out ${
-                    isActivePath(item.href) 
-                      ? 'w-full' 
-                      : 'w-0 group-hover:w-full'
-                  }`}></div>
+                  <div
+                    className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all duration-300 ease-out ${
+                      isActivePath(item.href)
+                        ? "w-full"
+                        : "w-0 group-hover:w-full"
+                    }`}
+                  ></div>
                 </button>
               ))}
             </nav>
@@ -136,7 +136,7 @@ export function Layout({ children }: LayoutProps) {
             <div>
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center">
-                  <img 
+                  <img
                     src="https://cdn.builder.io/api/v1/image/assets%2F42e34fe79f13424399d236fc2c7311f6%2Feb31e9232fe94232aad18320963e5242?format=webp&width=800"
                     alt="FING 2024 Logo"
                     className="w-full h-full object-contain"

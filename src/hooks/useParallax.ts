@@ -1,5 +1,5 @@
-import { useMemo, useCallback } from 'react';
-import { useScrollManager } from './useScrollManager';
+import { useMemo, useCallback } from "react";
+import { useScrollManager } from "./useScrollManager";
 
 interface UseParallaxOptions {
   speed?: number;
@@ -9,13 +9,13 @@ interface UseParallaxOptions {
 }
 
 export function useParallax(options: UseParallaxOptions = {}) {
-  const { 
-    speed = 0.5, 
+  const {
+    speed = 0.5,
     maxOffset = 200,
     targetElementId,
-    enabled = true 
+    enabled = true,
   } = options;
-  
+
   const { scrollY } = useScrollManager();
 
   const offset = useMemo(() => {
@@ -25,7 +25,7 @@ export function useParallax(options: UseParallaxOptions = {}) {
       const targetElement = document.getElementById(targetElementId);
       if (targetElement) {
         const elementHeight = targetElement.offsetHeight;
-        
+
         // Only apply parallax when within the target element
         if (scrollY <= elementHeight) {
           return Math.min(scrollY * speed, maxOffset);
@@ -33,14 +33,17 @@ export function useParallax(options: UseParallaxOptions = {}) {
       }
       return 0;
     }
-    
+
     return Math.min(scrollY * speed, maxOffset);
   }, [scrollY, speed, maxOffset, targetElementId, enabled]);
 
-  const parallaxStyle = useMemo(() => ({
-    transform: `translate3d(0, ${offset}px, 0)`,
-    willChange: enabled ? 'transform' : 'auto'
-  }), [offset, enabled]);
+  const parallaxStyle = useMemo(
+    () => ({
+      transform: `translate3d(0, ${offset}px, 0)`,
+      willChange: enabled ? "transform" : "auto",
+    }),
+    [offset, enabled],
+  );
 
   return { offset, parallaxStyle };
 }
